@@ -18,17 +18,17 @@ fn process_instruction(
         instruction_data
     );
 
-    // let key: &u8 = instruction_data
-    //     .first()
-    //     .ok_or_else(|| ProgramError::InvalidInstructionData)?;
+    let key: &u8 = instruction_data
+        .first()
+        .ok_or_else(|| ProgramError::InvalidInstructionData)?;
 
-    // let key: &u8 = instruction_data.first().unwrap();
+    let key: &u8 = instruction_data.first().unwrap();
 
-    // match key {
-    //     0 => msg!("Zero!"),
-    //     1 => msg!("One!"),
-    //     _ => msg!("Other: {:?}", key),
-    // }
+    match key {
+        0 => msg!("Zero!"),
+        1 => msg!("One!"),
+        _ => msg!("Other: {:?}", key),
+    }
 
     Ok(())
 }
