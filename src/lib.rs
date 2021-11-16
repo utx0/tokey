@@ -4,6 +4,8 @@ use solana_program::program_error::ProgramError;
 use solana_program::pubkey::Pubkey;
 use solana_program::{entrypoint, msg};
 
+use std::convert::TryInto;
+
 entrypoint!(process_instruction);
 
 fn process_instruction(
@@ -18,14 +20,30 @@ fn process_instruction(
         instruction_data
     );
 
-    let key: &u8 = instruction_data
-        .first()
+    // let key: &u8 = instruction_data
+    //     .first()
+    //     .ok_or_else(|| ProgramError::InvalidInstructionData)?;
+
+    // let key: &u8 = instruction_data.first().unwrap();
+    let (key, rem) = instruction_data
+        .split_first()
         .ok_or_else(|| ProgramError::InvalidInstructionData)?;
 
-    let key: &u8 = instruction_data.first().unwrap();
+    msg!("key: {:?}", key);
+    msg!("rem: {:?}", rem);
 
     match key {
-        0 => msg!("Zero!"),
+        0 => {
+            msg!("Zero!");
+
+            let value: u64 = rem
+                .get(0..8)
+                .and_then(|slice| slice.try_into().ok())
+                .map(u64::from_le_bytes)
+                .unwrap_or(0);
+
+            msg!("value: {}", value);
+        }
         1 => msg!("One!"),
         _ => msg!("Other: {:?}", key),
     }
